@@ -1,7 +1,7 @@
 {
   "name": "homebridge-level-sense",
   "displayName": "LevelSense HomeBridge Plug-in",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A dynamic platform plugin for homebridge to provide access to the LevelSense Cloud.",
   "main": "lib/index.js",
   "scripts": {

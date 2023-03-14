@@ -11,8 +11,8 @@ import {LevelSenseService} from './level-sense.service'
 import {Device, LevelSenseServiceConfigOptions} from './level-sense.types'
 import {PLATFORM_NAME, PLUGIN_NAME} from './settings'
 import {Service} from 'hap-nodejs/dist/lib/Service'
-import {generate} from 'hap-nodejs/dist/lib/util/uuid'
 import {LevelSensePlatformAccessory} from './platform-accessory'
+import crypto from 'crypto'
 
 /*
  * IMPORTANT NOTICE
@@ -171,7 +171,7 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
 
   private register(device: Device) {
     this.log.info(`Discovered Level Sense Device: ${device.displayName}.`)
-    const uuid = generate(device.deviceSerialNumber)
+    const uuid = this.generate(device.deviceSerialNumber)
     // create a new accessory
     const accessory = new this.api.platformAccessory(device.displayName, uuid)
     accessory.context.device = device
@@ -189,7 +189,7 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
    * It should be used to set up event handlers for characteristics and update respective values.
    */
   configureAccessory(accessory: PlatformAccessory): void {
-    this.log.info('Loading accessory from cache:', accessory.displayName);
+    this.log.info('Loading accessory from cache:', accessory.displayName)
     // add the restored accessory to the accessories cache, so we can track if it has already been registered
     this.cachedAccessories.push(accessory)
   }
@@ -206,5 +206,22 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
           .catch(error => this.log.error(error))
       }
     }
+  }
+
+  private generate(deviceSerialNumber: string) {
+    const sha1sum = crypto.createHash('sha1')
+    sha1sum.update(deviceSerialNumber)
+    const s = sha1sum.digest('hex')
+    let i = -1
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      i += 1
+      switch (c) {
+        case 'y':
+          return ((parseInt('0x' + s[i], 16) & 0x3) | 0x8).toString(16)
+        case 'x':
+        default:
+          return s[i]
+      }
+    })
   }
 }
