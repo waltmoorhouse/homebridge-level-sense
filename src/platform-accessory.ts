@@ -35,18 +35,15 @@ export class LevelSensePlatformAccessory {
       this.platform.log.info('%s identified!', accessory.displayName)
     })
 
-    const deviceOnline = this.context.device.online === '1'
     // Temperature Service Setup
     this.tempService = accessory.getService(this.platform.Service.TemperatureSensor) ||
       accessory.addService(this.platform.Service.TemperatureSensor)
-    this.tempService.setCharacteristic(this.platform.Characteristic.Active, deviceOnline)
     this.tempService.setCharacteristic(this.platform.Characteristic.Name, this.context.device.displayName + ' Temperature')
     this.tempService.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
       .onGet(this.getCurrentTemperature.bind(this))
 
     // Humidity Service Setup
     this.humidityService = accessory.getService(this.platform.Service.HumiditySensor) || accessory.addService(this.platform.Service.HumiditySensor)
-    this.humidityService.setCharacteristic(this.platform.Characteristic.Active, deviceOnline)
     this.humidityService.setCharacteristic(this.platform.Characteristic.Name, this.context.device.displayName + ' Humidity')
     this.humidityService.getCharacteristic(this.platform.Characteristic.CurrentRelativeHumidity)
       .onGet(this.getCurrentRelativeHumidity.bind(this))
@@ -67,7 +64,6 @@ export class LevelSensePlatformAccessory {
     const cs1Name = this.context.device.displayName + ' Leak Sensor'
     this.contactSensorOneService = this.accessory.getService(cs1Name) ||
       this.accessory.addService(this.platform.Service.ContactSensor, cs1Name, 'LevelSense-Sentry-Leak-Sensor')
-    this.contactSensorOneService.setCharacteristic(this.platform.Characteristic.Active, deviceOnline)
     this.contactSensorOneService.getCharacteristic(this.platform.Characteristic.ContactSensorState)
       .onGet(this.getContactSensor1State.bind(this))
 
@@ -76,7 +72,6 @@ export class LevelSensePlatformAccessory {
     const cs2Name = this.context.device.displayName + ' Float Switch'
     this.contactSensorTwoService = this.accessory.getService(cs2Name) ||
       this.accessory.addService(this.platform.Service.ContactSensor, cs2Name, 'LevelSense-Sentry-Float-Switch')
-    this.contactSensorTwoService.setCharacteristic(this.platform.Characteristic.Active, deviceOnline)
     this.contactSensorTwoService.getCharacteristic(this.platform.Characteristic.ContactSensorState)
       .onGet(this.getContactSensor2State.bind(this))
 

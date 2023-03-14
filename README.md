@@ -11,6 +11,11 @@ I can develop it myself.
 
 ## Configuration
 
+The Menu works fine on my test system, but when I publish it says it can't find the alias.  
+I've tried every string in the damn app as the alias and none of them work.  If you know
+how to make this work, please let me know. I have tried everything I can think of and the
+documentation is worthless.
+
 Poll Interval is how often the API is hit to get data.  Unless you're on the pro plan, 
 you can't send data faster than once every 2 minutes, so that's the minimum interval.
 Default value is 15, which should be good for most cases.
