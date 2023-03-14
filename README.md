@@ -1,4 +1,4 @@
-# Spruce Irrigation HomeBridge plugin
+# Level Sense HomeBridge plugin
 
 ## Introduction
 
