@@ -1,13 +1,13 @@
 {
   "name": "homebridge-level-sense",
   "displayName": "LevelSense HomeBridge Plug-in",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A dynamic platform plugin for homebridge to provide access to the LevelSense Cloud.",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",
     "lint": "eslint src/**.ts --max-warnings=0",
-    "build": "rimraf lib && tsc",
+    "build": "rimraf lib && tsc && cp config.schema.json lib/",
     "watch": "npm run build && npm link && nodemon",
     "prepublishOnly": "npm run build",
     "postpublish": "npm run clean"
