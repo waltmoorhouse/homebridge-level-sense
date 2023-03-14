@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "HomeBridgeLevelSense",
+  "pluginAlias": "homebridge-level-sense",
   "pluginType": "platform",
   "singular": true,
   "schema": {
