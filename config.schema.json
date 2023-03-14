@@ -1,0 +1,38 @@
+{
+  "pluginAlias": "HomeBridgeLevelSense",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "pollMinutes": {
+        "title": "Poll interval (minute)",
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 120,
+        "required": true,
+        "default": "15"
+      },
+      "email": {
+        "title": "LevelSense Email",
+        "type": "string",
+        "required": true,
+        "default": ""
+      },
+      "password": {
+        "title": "LevelSense Password",
+        "type": "string",
+        "required": true,
+        "default": ""
+      },
+      "sessionKey": {
+        "title": "LevelSense Session Key",
+        "type": "string",
+        "required": false,
+        "default": ""
+      }
+    }
+  },
+  "form": null,
+  "display": null
+}
