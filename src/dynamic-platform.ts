@@ -48,7 +48,7 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
   private readonly currentAccessories: Map<string, LevelSensePlatformAccessory> = new Map()
 
   constructor(readonly log: Logging,
-    private readonly config: PlatformConfig,
+    public config: PlatformConfig,
     private readonly api: API) {
 
     this.levelSenseService = new LevelSenseService(config as unknown as LevelSenseServiceConfigOptions, log)
@@ -86,7 +86,7 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
           }
         }
         if (!found) {
-          this.register(device)
+          this.register(device).then(() => this.log.debug('device registered'))
         }
       }
     })
@@ -132,7 +132,7 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
           }
         }
         if (!found) {
-          this.register(device)
+          this.register(device).then(() => this.log.debug('device registered'))
         }
       }
     })
@@ -169,7 +169,7 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
     return sensors
   }
 
-  private register(device: Device) {
+  private async register(device: Device) {
     this.log.info(`Discovered Level Sense Device: ${device.displayName}.`)
     const uuid = this.generate(device.deviceSerialNumber)
     // create a new accessory
@@ -177,7 +177,12 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
     accessory.context.device = device
 
     // config new accessory and add to list
-    this.currentAccessories.set(device.deviceSerialNumber, new LevelSensePlatformAccessory(this, accessory))
+
+    const resp = await this.levelSenseService.getDeviceAlarm(accessory.context.device.id)
+    if (resp?.success) {
+      accessory.context.readings = resp.device
+      this.currentAccessories.set(device.deviceSerialNumber, new LevelSensePlatformAccessory(this, accessory))
+    }
 
     // link the accessory to your platform
     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])

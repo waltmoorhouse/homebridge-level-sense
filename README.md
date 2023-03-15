@@ -11,10 +11,10 @@ I can develop it myself.
 
 ## Configuration
 
-The Menu works fine on my test system, but when I publish it says it can't find the alias.  
-I've tried every string in the damn app as the alias and none of them work.  If you know
-how to make this work, please let me know. I have tried everything I can think of and the
-documentation is worthless.
+If you're having trouble with the menu and you installed an earlier version, you will need to 
+restart the machine or container that HomeBridge is running on. I don't know why that is, but 
+if you see "Plugin Alias did not match" or something about not being able to save, you might
+be able to fix it this way.
 
 Poll Interval is how often the API is hit to get data.  Unless you're on the pro plan, 
 you can't send data faster than once every 2 minutes, so that's the minimum interval.

@@ -61,17 +61,19 @@ export class LevelSensePlatformAccessory {
      * can use the same subtype id.)
      */
     // create new Contact Sensor services
-    const cs1Name = this.context.device.displayName + ' Leak Sensor'
+    const cs1Name = this.context.readings.sensorLimit.find(sl => sl.sensorSlug === 'input1')?.sensorDisplayName || this.context.device.displayName + ' Leak Sensor'
     this.contactSensorOneService = this.accessory.getService(cs1Name) ||
       this.accessory.addService(this.platform.Service.ContactSensor, cs1Name, 'LevelSense-Sentry-Leak-Sensor')
+    this.contactSensorOneService.setCharacteristic(this.platform.Characteristic.Name, cs1Name)
     this.contactSensorOneService.getCharacteristic(this.platform.Characteristic.ContactSensorState)
       .onGet(this.getContactSensor1State.bind(this))
 
     this.tempService.addLinkedService(this.contactSensorOneService)
 
-    const cs2Name = this.context.device.displayName + ' Float Switch'
+    const cs2Name = this.context.readings.sensorLimit.find(sl => sl.sensorSlug === 'input2')?.sensorDisplayName || this.context.device.displayName + ' Float Switch'
     this.contactSensorTwoService = this.accessory.getService(cs2Name) ||
       this.accessory.addService(this.platform.Service.ContactSensor, cs2Name, 'LevelSense-Sentry-Float-Switch')
+    this.contactSensorTwoService.setCharacteristic(this.platform.Characteristic.Name, cs2Name)
     this.contactSensorTwoService.getCharacteristic(this.platform.Characteristic.ContactSensorState)
       .onGet(this.getContactSensor2State.bind(this))
 
