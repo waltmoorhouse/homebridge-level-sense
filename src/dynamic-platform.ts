@@ -39,7 +39,7 @@ import crypto from 'crypto'
  */
 
 export class LevelSensePlatform implements DynamicPlatformPlugin {
-  public readonly VERSION = "1.2.0" // This should always match package.json version
+  public readonly VERSION = "1.2.1" // This should always match package.json version
   public readonly Service: typeof Service = this.api.hap.Service
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic
 
