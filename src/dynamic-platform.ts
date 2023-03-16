@@ -39,12 +39,13 @@ import crypto from 'crypto'
  */
 
 export class LevelSensePlatform implements DynamicPlatformPlugin {
+  public readonly VERSION = "1.2.0" // This should always match package.json version
   public readonly Service: typeof Service = this.api.hap.Service
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic
 
   private readonly SUPPORTED_DEVICES = ['LS_SENTRY']
   private readonly levelSenseService: LevelSenseService
-  private readonly cachedAccessories: PlatformAccessory[] = []
+  private cachedAccessories: PlatformAccessory[] = []
   private readonly currentAccessories: Map<string, LevelSensePlatformAccessory> = new Map()
 
   constructor(readonly log: Logging,
@@ -82,7 +83,13 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
         let found = false
         for (const accessory of this.cachedAccessories) {
           if (device.deviceSerialNumber === accessory.context.device.deviceSerialNumber) {
-            found = true
+            if (this.VERSION === accessory.context.version) {
+              found = true
+            } else {
+              this.log.warn(`Old version of ${device.displayName} was found, removing so it can be reconfigured.`)
+              this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
+              this.cachedAccessories = this.cachedAccessories.filter(cached => cached.UUID !== accessory.UUID)
+            }
           }
         }
         if (!found) {
@@ -126,9 +133,13 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
       if (this.SUPPORTED_DEVICES.includes(device.deviceType)) {
         // Check to see if controllers already registered in accessories
         let found = false
-        for (const accessory of this.currentAccessories) {
-          if (device.deviceSerialNumber === accessory[1].context.device.deviceSerialNumber) {
-            found = true
+        for (const accessoryRecord of this.currentAccessories) {
+          if (device.deviceSerialNumber === accessoryRecord[1].context.device.deviceSerialNumber) {
+            if (this.VERSION === accessoryRecord[1].context.version) {
+              found = true
+            } else {
+              this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessoryRecord[1].accessory])
+            }
           }
         }
         if (!found) {
@@ -174,10 +185,12 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
     const uuid = this.generate(device.deviceSerialNumber)
     // create a new accessory
     const accessory = new this.api.platformAccessory(device.displayName, uuid)
+
+    // Add context to accessory
+    accessory.context.version = this.VERSION
     accessory.context.device = device
 
     // config new accessory and add to list
-
     const resp = await this.levelSenseService.getDeviceAlarm(accessory.context.device.id)
     if (resp?.success) {
       accessory.context.readings = resp.device

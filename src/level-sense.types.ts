@@ -7,6 +7,7 @@ export type LevelSenseServiceConfigOptions = {
 export type AccessoryContext = {
   device: Device
   readings: DeviceAlarm
+  version: string
 }
 
 export type LoginResult = {
