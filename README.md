@@ -26,3 +26,7 @@ you can log into the webapp and use Web Developer Tools in the browser to find t
 If you include the *Session Key* in the config, it will ignore the login information and 
 use that session key instead. I have no idea how long these session keys last, so you may have 
 to change it every day or so.
+
+# Donations
+
+If you find this useful and have a few extra bucks laying around, you can send a [donation](https://www.paypal.com/donate/?hosted_button_id=4SU4V4RS8G32W).
