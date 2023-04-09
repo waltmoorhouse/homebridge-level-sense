@@ -29,8 +29,8 @@ export class LevelSensePlatform implements DynamicPlatformPlugin {
     public config: PlatformConfig,
     private readonly api: API) {
     try {
-      if (!config || !config.email || !config.password || config.email === '' || config.password === '') {
-        log.error('Cannot start without email and password.')
+      if (!config || (!config.email || !config.password || config.email === '' || config.password === '') && (!config.sessionKey || config.sessionKey === '')) {
+        log.error('Cannot start without email and password or auth key.')
         return
       }
 
